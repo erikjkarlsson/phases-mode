@@ -58,7 +58,7 @@
   "List of moon phase emojis.")
 
 
-(defvar clock-phases
+(defvar phases-mode--clocks
   '("🕛" "🕧" "🕐" "🕜" "🕑" "🕝"
     "🕒" "🕞" "🕓" "🕟" "🕔" "🕠"
     "🕕" "🕡" "🕖" "🕢" "🕗" "🕣"
@@ -67,12 +67,12 @@
 
 
 (defcustom phases-mode-function #'phases-mode--clock-index
-  "Function used to index `phases-mode-emojis'."
+  "Function used to index `phases-mode-states'."
   :group 'phases-mode
   :type '(function))
 
 
-(defcustom phases-mode-emojis clock-phases
+(defcustom phases-mode-states phases-mode--clocks
   "Sequence to use with `phases-mode-function'."
   :group 'phases-mode
   :type '(list string))
@@ -111,14 +111,14 @@ error.
     (nth phase-index moons)))
 
 
-(cl-defun phases-mode--get-emoji (hour min sec)
+(cl-defun phases-mode--index-state (hour min sec)
   "Index an emoji in EMOJI-LIST given HOUR MIN and SEC.
 
 `:index-fun' is the function for indexing EMOJI-LIST,
              it is given `:hour' `:min' `:sec' as
              arguments and returns the emoji string."
 
-  (funcall phases-mode-function phases-mode-emojis
+  (funcall phases-mode-function phases-mode-states
            hour min sec))
 
 
@@ -129,7 +129,7 @@ error.
 	       (minute (nth 1 time))
 	       (second (nth 0 time)))
     (propertize (format "  %s %02d%02d"
-                        (phases-mode--get-emoji hour minute second)
+                        (phases-mode--index-state hour minute second)
 	                      hour
                         minute)
                         ;;second)
